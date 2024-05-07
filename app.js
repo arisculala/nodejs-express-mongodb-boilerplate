@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 
 const Logger = require('./src/utils/logger');
@@ -24,6 +25,9 @@ mongoose
 
 // middleware
 app.use(bodyParser.json());
+
+// enable CORS for all routes
+app.use(cors());
 
 // create a Router instance for all API routes
 const apiRouter = express.Router();

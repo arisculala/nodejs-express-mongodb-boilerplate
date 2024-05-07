@@ -3,7 +3,7 @@ info:
   title: nodejs-express-mongodb
   version: 0.0.1
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:3000/api'
 paths:
   #------------------>> /healthcheck <<------------------
   /healthcheck/:
@@ -81,7 +81,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         400:
-          $ref: '#/components/responses/BadRequestError'
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
     get:
       tags:
         - users
@@ -95,6 +105,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
     patch:
       tags:
         - users
@@ -120,13 +136,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         400:
-          $ref: '#/components/responses/BadRequestError'
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
         404:
           description: User not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserNotFoundError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
     delete:
       tags:
         - users
@@ -147,6 +173,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserNotFoundError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
   /users/{id}:
     get:
       tags:
@@ -172,6 +204,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserNotFoundError'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponse'
 
 components:
   schemas:
@@ -335,6 +373,19 @@ components:
                     type: string
                   key:
                     type: string
+    InternalServerErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: "The server encountered an error and could not complete your request."
+        details:
+          type: string
+          example: "E11000 duplicate key error collection: my-mongodb-local.users index: email_1 dup key: { email: \"johndoe@example.com\" }"
+
   examples:
     healthcheckReadinessExample:
       value:
